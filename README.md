@@ -1,3 +1,5 @@
+# Docker-angular-flask-mysql application
+
 Code for a creating a docker app with Angular 9, Flask and MySQL tutorial
 
 The app consists of 3 parts: the frontend implemented with Angular 9, the backend in Flask, and a MySQL database. 
