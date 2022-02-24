@@ -1,0 +1,51 @@
+version: "3.3"
+networks:
+   app_network:
+      external: false
+
+services:
+    app-backend:
+        build: 
+            context: ./backend
+            dockerfile: Dockerfile
+        image: flask_app
+        container_name: backend
+        depends_on:
+            - db
+        restart: always
+        ports:
+            - "5000:5000"
+        networks: 
+            - app_network
+    db: 
+        image: mysql:8
+        container_name: db
+        command: --default-authentication-plugin=mysql_native_password 
+        restart: always
+        ports:
+            - "3308:3306"
+        networks: 
+            - app_network
+        environment:
+            MYSQL_ROOT_PASSWORD: "1234"   
+            MYSQL_DATABASE : "my_webtool_db"
+        volumes:
+            - db-data:/var/lib/mysql
+            #  - ./db/mysql/init/init.sql:/docker-entrypoint-initdb./init.sql/ :ro
+    app-frontend:
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
+        image: angular_app
+        container_name: frontend
+        restart: always
+        ports:
+            - "80:80"
+        networks: 
+            - app_network 
+        expose:
+            - "80"
+
+volumes:
+   db-data:
+      driver: local
